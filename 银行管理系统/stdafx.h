@@ -11,6 +11,7 @@
 #include <tchar.h>
 #include "ClientSide.h"
 #include "Client.h"
+#include "ClientSide.h"
 
 
 
