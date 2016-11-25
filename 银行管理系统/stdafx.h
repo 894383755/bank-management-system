@@ -9,9 +9,14 @@
 
 #include <stdio.h>
 #include <tchar.h>
+#include <stdlib.h>
 #include "ClientSide.h"
 #include "Client.h"
 #include "ClientSide.h"
+#include "ServerSide.h"
+
+typedef unsigned long long int ULL ;
+typedef long long int          LL ;
 
 
 

@@ -3,10 +3,13 @@
 
 #include "stdafx.h"
 
-
 int _tmain(int argc, _TCHAR* argv[])
 {
-	
+	printf("服务器启动中...\n");
+	ServerSide * serverSide = ServerSide::RunServerSide();
+	printf("客户端启动中...\n");
+	ClientSide clientSide(serverSide);
+	while(clientSide.Menu());
 	return 0;
 }
 

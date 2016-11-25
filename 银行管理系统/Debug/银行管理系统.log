@@ -1,37 +1,17 @@
-﻿生成启动时间为 11/24/2016 7:47:09 PM。
-     1>项目“c:\Users\wang l\documents\visual studio 2010\Projects\银行管理系统\银行管理系统\银行管理系统.vcxproj”在节点 2 上(build 个目标)。
-     1>PrepareForBuild:
-         正在创建目录“c:\users\wang l\documents\visual studio 2010\Projects\银行管理系统\Debug\”。
-       InitializeBuildStatus:
+﻿生成启动时间为 11/25/2016 8:35:50 PM。
+     1>项目“C:\Users\wang l\documents\visual studio 2010\Projects\银行管理系统\银行管理系统\银行管理系统.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
          正在创建“Debug\银行管理系统.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
        ClCompile:
-         E:\visual studio 2010\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yc"StdAfx.h" /Fp"Debug\银行管理系统.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
-         stdafx.cpp
-         E:\visual studio 2010\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Debug\银行管理系统.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ClientSide.cpp "银行管理系统.cpp"
-         银行管理系统.cpp
+         所有输出均为最新。
+         E:\visual studio 2010\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Debug\银行管理系统.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt ClientSide.cpp
          ClientSide.cpp
-         正在生成代码...
-       ManifestResourceCompile:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\银行管理系统.exe.embed.manifest.res" "Debug\银行管理系统_manifest.rc" 
-       Link:
-         E:\visual studio 2010\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"c:\users\wang l\documents\visual studio 2010\Projects\银行管理系统\Debug\银行管理系统.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\银行管理系统.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"c:\users\wang l\documents\visual studio 2010\Projects\银行管理系统\Debug\银行管理系统.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"c:\users\wang l\documents\visual studio 2010\Projects\银行管理系统\Debug\银行管理系统.lib" /MACHINE:X86 "Debug\银行管理系统.exe.embed.manifest.res"
-         Debug\ClientSide.obj
-         Debug\stdafx.obj
-         "Debug\银行管理系统.obj"
-       Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\银行管理系统.exe.embed.manifest" /manifest "Debug\银行管理系统.exe.intermediate.manifest"
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\rc.exe /nologo /fo"Debug\银行管理系统.exe.embed.manifest.res" "Debug\银行管理系统_manifest.rc" 
-       LinkEmbedManifest:
-         E:\visual studio 2010\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"c:\users\wang l\documents\visual studio 2010\Projects\银行管理系统\Debug\银行管理系统.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\银行管理系统.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"c:\users\wang l\documents\visual studio 2010\Projects\银行管理系统\Debug\银行管理系统.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"c:\users\wang l\documents\visual studio 2010\Projects\银行管理系统\Debug\银行管理系统.lib" /MACHINE:X86 "Debug\银行管理系统.exe.embed.manifest.res"
-         Debug\ClientSide.obj
-         Debug\stdafx.obj
-         "Debug\银行管理系统.obj"
-         银行管理系统.vcxproj -> c:\users\wang l\documents\visual studio 2010\Projects\银行管理系统\Debug\银行管理系统.exe
-       FinalizeBuildStatus:
-         正在删除文件“Debug\银行管理系统.unsuccessfulbuild”。
-         正在对“Debug\银行管理系统.lastbuildstate”执行 Touch 任务。
-     1>已完成生成项目“c:\Users\wang l\documents\visual studio 2010\Projects\银行管理系统\银行管理系统\银行管理系统.vcxproj”(build 个目标)的操作。
+     1>c:\users\wang l\documents\visual studio 2010\projects\银行管理系统\银行管理系统\clientside.cpp(23): warning C4996: 'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 e:\visual studio 2010\vc\include\stdio.h(304) : 参见“scanf”的声明
+     1>c:\users\wang l\documents\visual studio 2010\projects\银行管理系统\银行管理系统\clientside.cpp(25): error C2039: “cout”: 不是“std”的成员
+     1>c:\users\wang l\documents\visual studio 2010\projects\银行管理系统\银行管理系统\clientside.cpp(25): error C2065: “cout”: 未声明的标识符
+     1>已完成生成项目“C:\Users\wang l\documents\visual studio 2010\Projects\银行管理系统\银行管理系统\银行管理系统.vcxproj”(build 个目标)的操作 - 失败。
 
-生成成功。
+生成失败。
 
-已用时间 00:00:05.11
+已用时间 00:00:00.17

@@ -1,16 +1,20 @@
 #pragma once
+#include "StdAfx.h"
+typedef unsigned long long int ULL;
+typedef long long int          LL;
 class Client
 {
-	unsigned long long int m_ID;//账号
-	unsigned long long int m_pass;//密码
-	long long int Balance;//余额
-	Client(void);
+	friend class ServerSide ;
+	ULL m_ID;//账号
+	ULL m_pass;//密码
+	LL  balance;//余额
+	Client(ULL ID,ULL pass,LL money = 0);//新建账户
 	~Client(void);
 public:
-	bool CheckID(unsigned long long int);//检查账号是否正确
-	bool AddMoney();//存钱时增加
-	bool SubMoney();//取钱时减少
-	bool CheckBalance();//余额
-	bool CheckPass(unsigned long long int);//检查密码是否正确
+	bool CheckID(ULL) const;//检查账号是否正确
+	ULL AddMoney(ULL);//存钱时增加
+	ULL SubMoney(ULL);//取钱时减少
+	ULL  QueryBalance() const;//检查余额
+	bool CheckPass(ULL) const;//检查密码是否正确  先要绑定账号
 };
 
