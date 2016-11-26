@@ -9,7 +9,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	ServerSide * serverSide = ServerSide::RunServerSide();
 	printf("客户端启动中...\n");
 	ClientSide clientSide(serverSide);
-	while(clientSide.Menu());
+	while(clientSide.Account())
+		clientSide.Menu();
 	return 0;
 }
 
