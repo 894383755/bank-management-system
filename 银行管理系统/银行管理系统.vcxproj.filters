@@ -27,9 +27,6 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Client.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="ServerSide.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -44,10 +41,13 @@
     <ClCompile Include="ClientSide.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Client.cpp">
+    <ClCompile Include="ServerSide.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ServerSide.cpp">
+    <ClCompile Include="ServerProgress.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientProgress.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

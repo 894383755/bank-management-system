@@ -10,8 +10,9 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <stdlib.h>
+#include <stdlib.h>
 #include "ClientSide.h"
-#include "Client.h"
+//#include "Client.h"
 #include "ClientSide.h"
 #include "ServerSide.h"
 
