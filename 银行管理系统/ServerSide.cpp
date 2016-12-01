@@ -1,18 +1,23 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "ServerSide.h"
-
+#include <iostream>
 const int STR_MAX_LEN = 100;
-//¾²Ì¬:
+const int PORT = 60000;
+using namespace std;
+//é™æ€:
+bool ServerSide::isLinkNetWork = false;
 ServerSide * ServerSide::hasServerSide = NULL;
 MYSQL * ServerSide::mysql = NULL;
-ServerSide * ServerSide::RunServerSide(){
+bool ServerSide::RunServerSide(){
 	if(hasServerSide == NULL)
 		hasServerSide = new ServerSide;
-	if(mysql == NULL)
+	while(mysql == NULL)
 		LinkDataBase();
-	return hasServerSide;
+	while(!isLinkNetWork)
+		LinkNetWork();
+	return true;
 }
-//¹¹Ôì:
+//æ„é€ :
 ServerSide::ServerSide(void)
 {
 }
@@ -24,73 +29,73 @@ ServerSide::~ServerSide(void)
 	mysql_close(mysql); 
 }
 
-bool ServerSide::FindClient(unsigned long long int ID){
+bool ServerSide::FindClient(ULL ID){
 	char str[STR_MAX_LEN];
 	sprintf_s(str,"serlect * from client where ID == %llu",ID);
 	if( ! mysql_query(mysql,str))
-	return true;
+		return true;
+	else return false;
 }
 
 bool ServerSide::NewClient(){
 	ULL ID,pass;
-	printf("ÇëÊäÈëĞÂ½¨¿Í»§µÄÕËºÅ\n");
+	printf("è¯·è¾“å…¥æ–°å»ºå®¢æˆ·çš„è´¦å·\n");
 	scanf_s("%I64u",&ID);
 	while(FindClient(ID) != NULL){
-		printf("ÕËºÅÖØ¸´\n");
-		printf("ÇëÊäÈëĞÂ½¨¿Í»§µÄÕËºÅ\n");
+		printf("è´¦å·é‡å¤\n");
+		printf("è¯·è¾“å…¥æ–°å»ºå®¢æˆ·çš„è´¦å·\n");
 		scanf_s("%I64u",&ID);
 	}
-	printf("ÇëÊäÈëĞÂ½¨ÕËºÅµÄÃÜÂë\n");
+	printf("è¯·è¾“å…¥æ–°å»ºè´¦å·çš„å¯†ç \n");
 	scanf_s("%I64u",&pass);
 	char str[STR_MAX_LEN];
 	sprintf_s(str,"INsert into client VALUES (%d,123456,%d)",ID,pass);
 	int result = mysql_query(mysql,str);
-	if(result == 0) printf("ĞÂ½¨ÕË»§Ê§°Ü\n");
-	else printf("ĞÂ½¨ÕË»§³É¹¦\n");
-	printf("°´ÈÎÒâ¼ü·µ»Ø²Ëµ¥\n");
+	if(result == 0) printf("æ–°å»ºè´¦æˆ·å¤±è´¥\n");
+	else printf("æ–°å»ºè´¦æˆ·æˆåŠŸ\n");
+	printf("æŒ‰ä»»æ„é”®è¿”å›èœå•\n");
 	system("pause");
 	return true;
 }
 
 bool ServerSide::RemoveClient(){
 	ULL ID;
-	printf("ÇëÊäÈëÉ¾³ı¿Í»§µÄÕËºÅ\n");
+	printf("è¯·è¾“å…¥åˆ é™¤å®¢æˆ·çš„è´¦å·\n");
 	scanf_s("%I64u",&ID);
 	while(FindClient(ID) == NULL){
-		printf("ÕËºÅ²»´æÔÚ»òÊäÈë´íÎó\n");
-		printf("ÇëÊäÈëÉ¾³ı¿Í»§µÄÕËºÅ\n");
+		printf("è´¦å·ä¸å­˜åœ¨æˆ–è¾“å…¥é”™è¯¯\n");
+		printf("è¯·è¾“å…¥åˆ é™¤å®¢æˆ·çš„è´¦å·\n");
 		scanf_s("%I64u",&ID);
 	}
-	/* ²åÈësql´úÂë          */
-	printf("É¾³ıÕË»§³É¹¦\n");
-	printf("°´ÈÎÒâ¼ü·µ»Ø²Ëµ¥\n");
+	/* æ’å…¥sqlä»£ç           */
+	printf("åˆ é™¤è´¦æˆ·æˆåŠŸ\n");
+	printf("æŒ‰ä»»æ„é”®è¿”å›èœå•\n");
 	system("pause");
 	return true;
 }
 
-bool ServerSide::ChangeClient(){//ĞèÒªĞŞ¸Ä
+bool ServerSide::ChangeClient(){//éœ€è¦ä¿®æ”¹
 	ULL ID,pass;
 	LL bablance;
 	while(1){
-		printf("ÇëÊäÈëĞŞ¸Ä¿Í»§µÄÕËºÅ\n");
+		printf("è¯·è¾“å…¥ä¿®æ”¹å®¢æˆ·çš„è´¦å·\n");
 		scanf_s("%I64u",&ID);
 		if(FindClient(ID))
 			break;
 	}
-	printf("ÇëÊäÈëĞŞ¸ÄÕËºÅµÄÃÜÂë\n");
+	printf("è¯·è¾“å…¥ä¿®æ”¹è´¦å·çš„å¯†ç \n");
 	scanf_s("%I64u",&pass);
 	//client->m_pass = pass;
-	printf("ÇëÊäÈëĞŞ¸ÄÕËºÅµÄÓà¶î\n");
+	printf("è¯·è¾“å…¥ä¿®æ”¹è´¦å·çš„ä½™é¢\n");
 	scanf_s("%I64d",&bablance);
 	//client->balance = bablance;
-	printf("ĞŞ¸ÄÕË»§³É¹¦\n");
-	printf("°´ÈÎÒâ¼ü·µ»Ø²Ëµ¥\n");
+	printf("ä¿®æ”¹è´¦æˆ·æˆåŠŸ\n");
+	printf("æŒ‰ä»»æ„é”®è¿”å›èœå•\n");
 	system("pause");
 	return true;
 }
 
 bool ServerSide::LinkDataBase(){
-	printf("data best is star run :\n");
 	mysql = new MYSQL;
 	mysql_init(mysql);
 	char user[]="root";
@@ -103,7 +108,7 @@ bool ServerSide::LinkDataBase(){
 		mysql_close(mysql); 
 		return false;
 	}else {
-		printf("connect success\n");
+		printf("data best is  success\n");
 	}
 	return true;
 }
@@ -164,4 +169,69 @@ bool ServerSide::SaveMoney(ULL user,ULL pass,ULL saveGet){
 		return false;
 	else 
 		return true;
+}
+DWORD WINAPI TcpServer(LPARAM  lparam);
+bool ServerSide::LinkNetWork(){
+	// åˆå§‹åŒ–ç½‘ç»œ
+	WSADATA wsaData;
+	WORD wVersionRequested;
+	wVersionRequested = MAKEWORD( 2, 2 );//?æ±¾??
+	if(WSAStartup( wVersionRequested, &wsaData ))
+	{
+		cout<<"WSAStartup is failed \n";
+		return false;
+	}
+	cout<<"WSAStartup is OK \n";
+
+	SOCKET sockSrv=socket(AF_INET,SOCK_STREAM,0);
+	SOCKADDR_IN addrSrv;
+	addrSrv.sin_addr.S_un.S_addr=htonl(INADDR_ANY);
+	addrSrv.sin_family=AF_INET;
+	addrSrv.sin_port=htons(PORT);
+	cout<<"IP :"<<INADDR_ANY<<endl<<"port :"<<PORT<<endl;
+	if(SOCKET_ERROR == bind(sockSrv,(SOCKADDR*)&addrSrv,sizeof(SOCKADDR))){
+		cout<<"bind is false \n";
+	}else cout<<"bind is OK \n";
+	if(SOCKET_ERROR == listen(sockSrv,5))
+	{
+		cout<<"listen is false \n";
+	}else cout<<"listen is OK \n";
+	SOCKADDR_IN addrClient;
+	int len=sizeof(SOCKADDR);
+	while(1)
+	{
+		SOCKET sockConn=accept(sockSrv,(SOCKADDR*)&addrClient,&len);
+		if(INVALID_SOCKET == sockConn){
+			cout<<"accept is false \n";
+		}else cout<<"accept is OK \n";
+		isLinkNetWork = true;
+		CreateThread(0,0,(LPTHREAD_START_ROUTINE)TcpServer,(LPVOID)sockConn,0,0);
+	}
+	closesocket(sockSrv);
+	cout<<"tcp_server is end\n";
+}
+DWORD WINAPI TcpServer(LPARAM  lparam)
+{
+	cout<<"bulid Thread is OK \n";
+	SOCKET socket = (SOCKET) lparam;
+	char sendBuf[BUFSIZE]="Welcome to here!",recvBuf[BUFSIZE];
+	while(1){
+		memset(recvBuf,0,sizeof(recvBuf));
+		auto errRecv = recv(socket,recvBuf,sizeof(recvBuf),0);
+		if(SOCKET_ERROR == errRecv){
+			cout<<"recv is false \n";
+		}else if(0 == errRecv){
+			cout<<"Thread is end \n\n";
+			closesocket(socket);
+			return 0;
+		}else cout<<"recv : "<<recvBuf<<endl;
+		/*
+
+		æå–å­—ç¬¦ é€‰æ‹©ç¨‹åº
+
+		*/
+		if(SOCKET_ERROR == send(socket,sendBuf,sizeof(sendBuf),0)){
+			cout<<"send is false \n";
+		}else cout<<"send :"<<sendBuf<<endl;
+	}
 }
