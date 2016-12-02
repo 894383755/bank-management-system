@@ -1,9 +1,7 @@
 ﻿#include "StdAfx.h"
 #include "ClientSide.h"
-using namespace std;
 const int PORT = 60000;
-//SOCKET * ClientSide::sockClient = NULL;
-ClientSide::ClientSide()
+ClientSide::ClientSide():isConnectNetWork (SOCKET_ERROR)
 {
 	
 }
@@ -13,22 +11,22 @@ ClientSide::~ClientSide(void)
 {
 }
 
-size_t ClientSide::Menu(){
+bool ClientSide::Menu(){
 	system("CLS");
 	printf("请输入你要的功能:\n");
 	printf("0:退出登录:\n");
 	printf("1:查询余额:\n");
 	printf("2:定额取款:\n");
 	printf("3:定额存款\n");
-	printf("4:重新登录:\n");
 	int select;
 	scanf_s("%d",&select);
 	switch(select){
 	case 0://退出
-		return 0;
+		closesocket(sockClient);
+		return false;
 		break;
 	case 1://查余额
-		CheckBalance();
+		QueryBalance();
 		break;
 	case 2://取钱
 		GetMoney();
@@ -36,42 +34,39 @@ size_t ClientSide::Menu(){
 	case 3://存钱
 		SaveMoney();
 		break;
-	case 4://重登录
-		Account();
-		break;
 	default :
 		printf("输入错误 请重新输入\n");
 		scanf_s("%d",&select);
 		break;
 	}
-	return 1;
+	return true;
 }
-bool ClientSide::Account(){
+bool ClientSide::CheckClient(){
 	while(1){
 		system("cls");
 		printf("请输入账户\n");
 		scanf_s("%llu",&ID);
 		printf("请输入密码\n");
 		scanf_s("%llu",&pass);
-		sscanf_s(sendMsg,"%s","Account:%llu,%llu,0",&ID,&pass);
+		sprintf_s(sendMsg,"CheckClient:%llu,%llu,0",ID,pass);
 		send(sockClient,sendMsg,strlen(sendMsg),0);
 		recv(sockClient,recvMsg,sizeof(recvMsg),0);
-		if(strcmp(recvMsg,"OK") != 0)
+		if(strcmp(recvMsg,"OK") )
 			printf("\n!!!账号或密码错误!!!\n");
 		else 
 			break;
 		system("PAUSE");
 	}
-	return false;
+	return true;
 }
 
-LL ClientSide::CheckBalance(){
+LL ClientSide::QueryBalance(){
 	system("CLS");
-	sscanf_s(sendMsg,"%s","QueryBalance:%llu,%llu,0",&ID,&pass);
+	sprintf_s(sendMsg,"QueryBalance:%llu,%llu,0",ID,pass);
 	send(sockClient,sendMsg,strlen(sendMsg),0);
 	recv(sockClient,recvMsg,sizeof(recvMsg),0);
 	LL balance ;
-	sscanf_s(recvMsg,"%d",&balance);
+	sscanf_s(recvMsg,"%lld",&balance);
 	printf("你的余额为: %lld\n",balance);
 	system("PAUSE");
 	return balance;
@@ -88,17 +83,12 @@ bool ClientSide::GetMoney(){
 			continue;
 		}
 		if( 0 == wantGet) return true;
-		if(CheckBalance() < wantGet){
-			printf("你的存款不足 请重新输入\n");
-			system("PAUSE");
-			continue;
-		}
 		break;
 	}
-	sscanf_s(sendMsg,"%s","SubMoney:%llu,%llu,%lld",&ID,&pass,&wantGet);
+	sprintf_s(sendMsg,"SubMoney:%llu,%llu,%lld",ID,pass,wantGet);
 	send(sockClient,sendMsg,strlen(sendMsg),0);
 	recv(sockClient,recvMsg,sizeof(recvMsg),0);
-	if(strcmp(recvMsg,"OK"))
+	if(!strcmp(recvMsg,"OK"))
 		printf("取款成功\n");
 	else 
 		printf("取款失败\n");
@@ -119,10 +109,10 @@ bool ClientSide::SaveMoney(){
 		}
 		break;
 	}
-	sscanf_s(sendMsg,"%s","SaveMoney:%llu,%llu,%lld",&ID,&pass,&wantSave);
+	sprintf_s(sendMsg,"SaveMoney:%llu,%llu,%lld",ID,pass,wantSave);
 	send(sockClient,sendMsg,strlen(sendMsg),0);
 	recv(sockClient,recvMsg,sizeof(recvMsg),0);
-	if(strcmp(recvMsg,"OK"))
+	if(!strcmp(recvMsg,"OK"))
 		printf("存款成功\n");
 	else 
 		printf("存款失败\n");
@@ -137,7 +127,14 @@ bool  ClientSide::CheckLinkServer(){
 		return false;
 }
 bool  ClientSide::LinkServer(){
-	cout<<"tcp_client star run\n";
+	WSADATA wsaData;
+	WORD wVersionRequested;
+	wVersionRequested = MAKEWORD( 2, 2 );
+	if(WSAStartup( wVersionRequested, &wsaData ))
+	{
+		//cout<<"WSAStartup is failed \n";
+		return false;
+	}
 	sockClient = socket(AF_INET,SOCK_STREAM,0);
 	SOCKADDR_IN addrSrv;
 	addrSrv.sin_addr.S_un.S_addr=inet_addr("127.0.0.1");

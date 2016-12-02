@@ -113,7 +113,7 @@ bool ServerSide::LinkDataBase(){
 	return true;
 }
 
-bool ServerSide::CheckClient(ULL user,ULL pass)
+bool ServerSide::CheckClient(ULL user,ULL pass,ULL other)
 {
 	char str[STR_MAX_LEN];
 	sprintf_s(str,"select * from client where client.user = %llu and client.pass = %llu",user,pass);
@@ -132,7 +132,7 @@ bool ServerSide::CheckClient(ULL user,ULL pass)
 		}
 	}
 }
-LL ServerSide::QueryBalance(ULL user,ULL pass){
+LL ServerSide::QueryBalance(ULL user,ULL pass,ULL other){
 	char str[STR_MAX_LEN];
 	sprintf_s(str,"select client.money from client where client.user = %llu and client.pass = %llu",user,pass);
 	if (mysql_query(mysql,str)){//
@@ -154,6 +154,8 @@ LL ServerSide::QueryBalance(ULL user,ULL pass){
 	}
 }
 bool ServerSide::SubMoney(ULL user,ULL pass,ULL wantGet){
+	if(QueryBalance(user,pass,wantGet)<(LL)wantGet)
+		return false;
 	char str[STR_MAX_LEN];
 	sprintf_s(str,"UPDATE client SET money = money - %llu WHERE user = %llu and pass = %llu",wantGet,user,pass);
 	if ( mysql_query(mysql,str)){
@@ -170,12 +172,62 @@ bool ServerSide::SaveMoney(ULL user,ULL pass,ULL saveGet){
 	else 
 		return true;
 }
-DWORD WINAPI TcpServer(LPARAM  lparam);
+
+bool ServerSide::MenuFun(char *fun,ULL user,ULL pass,ULL money)
+{
+
+	if(!strcmp(fun,"CheckClient")){
+		if(CheckClient(user,pass,money))
+			strcpy_s(fun,BUFSIZE,"OK");
+		else 
+			strcpy_s(fun,BUFSIZE,"NO");
+	}else if(!strcmp(fun,"QueryBalance")){
+		sprintf(fun,"%lld",QueryBalance(user,pass,money));
+	}else if(!strcmp(fun,"SubMoney")){
+		if(SubMoney(user,pass,money))
+			strcpy_s(fun,BUFSIZE,"OK");
+		else 
+			strcpy_s(fun,BUFSIZE,"NO");
+	}else if(!strcmp(fun,"SaveMoney")){
+		if(SaveMoney(user,pass,money))
+			strcpy_s(fun,BUFSIZE,"OK");
+		else 
+			strcpy_s(fun,BUFSIZE,"NO");
+	}return false;
+	return true;
+}
+
+DWORD WINAPI TcpServer(LPARAM  lparam)
+{
+	cout<<"bulid Thread is OK \n";
+	SOCKET socket = (SOCKET) lparam;
+	char sendBuf[BUFSIZE],recvBuf[BUFSIZE];
+	while(1){
+		memset(recvBuf,0,sizeof(recvBuf));
+		auto errRecv = recv(socket,recvBuf,sizeof(recvBuf),0);
+		if(SOCKET_ERROR == errRecv){
+			continue;
+		}else if(0 == errRecv){
+			cout<<"Thread is end \n\n";
+			closesocket(socket);
+			return 0;
+		}else cout<<"recv : "<<recvBuf<<endl;
+		char fun[BUFSIZE];
+		ULL  user,pass,money;
+		sscanf_s(recvBuf,"%[^:]:%llu,%llu,%llu",fun,&user,&pass,&money);
+		ServerSide::hasServerSide->MenuFun(fun,user,pass,money);
+		strcpy_s(sendBuf,BUFSIZE,fun);
+		if(SOCKET_ERROR == send(socket,sendBuf,sizeof(sendBuf),0)){
+			cout<<"send is false \n";
+		}else cout<<"send :"<<sendBuf<<endl;
+	}
+}
+
 bool ServerSide::LinkNetWork(){
 	// 初始化网络
 	WSADATA wsaData;
 	WORD wVersionRequested;
-	wVersionRequested = MAKEWORD( 2, 2 );//?汾??
+	wVersionRequested = MAKEWORD( 2, 2 );
 	if(WSAStartup( wVersionRequested, &wsaData ))
 	{
 		cout<<"WSAStartup is failed \n";
@@ -188,7 +240,6 @@ bool ServerSide::LinkNetWork(){
 	addrSrv.sin_addr.S_un.S_addr=htonl(INADDR_ANY);
 	addrSrv.sin_family=AF_INET;
 	addrSrv.sin_port=htons(PORT);
-	cout<<"IP :"<<INADDR_ANY<<endl<<"port :"<<PORT<<endl;
 	if(SOCKET_ERROR == bind(sockSrv,(SOCKADDR*)&addrSrv,sizeof(SOCKADDR))){
 		cout<<"bind is false \n";
 	}else cout<<"bind is OK \n";
@@ -210,28 +261,5 @@ bool ServerSide::LinkNetWork(){
 	closesocket(sockSrv);
 	cout<<"tcp_server is end\n";
 }
-DWORD WINAPI TcpServer(LPARAM  lparam)
-{
-	cout<<"bulid Thread is OK \n";
-	SOCKET socket = (SOCKET) lparam;
-	char sendBuf[BUFSIZE]="Welcome to here!",recvBuf[BUFSIZE];
-	while(1){
-		memset(recvBuf,0,sizeof(recvBuf));
-		auto errRecv = recv(socket,recvBuf,sizeof(recvBuf),0);
-		if(SOCKET_ERROR == errRecv){
-			cout<<"recv is false \n";
-		}else if(0 == errRecv){
-			cout<<"Thread is end \n\n";
-			closesocket(socket);
-			return 0;
-		}else cout<<"recv : "<<recvBuf<<endl;
-		/*
 
-		提取字符 选择程序
 
-		*/
-		if(SOCKET_ERROR == send(socket,sendBuf,sizeof(sendBuf),0)){
-			cout<<"send is false \n";
-		}else cout<<"send :"<<sendBuf<<endl;
-	}
-}

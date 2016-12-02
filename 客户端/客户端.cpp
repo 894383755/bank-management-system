@@ -7,11 +7,15 @@
 int _tmain(int argc, _TCHAR* argv[])
 {
 	ClientSide clientSide;
-	while(!clientSide.CheckLinkServer()){
-		clientSide.LinkServer();
-	}
-	if(clientSide.Account())
+	if(!clientSide.CheckLinkServer())
+		if(!clientSide.LinkServer()){
+			printf("!!!Link Server is error\n");
+			system("PAUSE");
+			return 0;
+		}
+	if(clientSide.CheckClient())
 		while(clientSide.Menu())
+			continue;
 			/* Пе */;
 	return 0;
 }
