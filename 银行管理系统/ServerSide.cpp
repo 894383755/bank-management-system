@@ -197,13 +197,12 @@ bool ServerSide::MenuFun(char *fun,ULL user,ULL pass,ULL money)
 	return true;
 }
 
-DWORD WINAPI TcpServer(LPARAM  lparam)
+ DWORD WINAPI TcpServer(LPARAM  lparam)
 {
 	cout<<"bulid Thread is OK \n";
 	SOCKET socket = (SOCKET) lparam;
 	char sendBuf[BUFSIZE],recvBuf[BUFSIZE];
 	while(1){
-		memset(recvBuf,0,sizeof(recvBuf));
 		auto errRecv = recv(socket,recvBuf,sizeof(recvBuf),0);
 		if(SOCKET_ERROR == errRecv){
 			continue;
@@ -211,10 +210,15 @@ DWORD WINAPI TcpServer(LPARAM  lparam)
 			cout<<"Thread is end \n\n";
 			closesocket(socket);
 			return 0;
-		}else cout<<"recv : "<<recvBuf<<endl;
+		}else {
+			for(int i = 0;i < sizeof(recvBuf)-1;i++)
+				if(recvBuf[i] == ';')
+					recvBuf[i+1] ='\0';
+			printf("recv : %s\n",recvBuf);
+		}
 		char fun[BUFSIZE];
 		ULL  user,pass,money;
-		sscanf_s(recvBuf,"%[^:]:%llu,%llu,%llu",fun,&user,&pass,&money);
+		sscanf(recvBuf,"%[^:]:%llu,%llu,%llu;",fun,&user,&pass,&money);
 		ServerSide::hasServerSide->MenuFun(fun,user,pass,money);
 		strcpy_s(sendBuf,BUFSIZE,fun);
 		if(SOCKET_ERROR == send(socket,sendBuf,sizeof(sendBuf),0)){
@@ -250,13 +254,14 @@ bool ServerSide::LinkNetWork(){
 	SOCKADDR_IN addrClient;
 	int len=sizeof(SOCKADDR);
 	while(1)
-	{
-		SOCKET sockConn=accept(sockSrv,(SOCKADDR*)&addrClient,&len);
+	{cout<<"进入";
+		SOCKET sockConn=accept(sockSrv,(SOCKADDR*)&addrClient,&len);cout<<"出来了";
 		if(INVALID_SOCKET == sockConn){
 			cout<<"accept is false \n";
+			continue;
 		}else cout<<"accept is OK \n";
 		isLinkNetWork = true;
-		CreateThread(0,0,(LPTHREAD_START_ROUTINE)TcpServer,(LPVOID)sockConn,0,0);
+		CreateThread(NULL,0,(LPTHREAD_START_ROUTINE)TcpServer,(LPVOID)sockConn,0,NULL);
 	}
 	closesocket(sockSrv);
 	cout<<"tcp_server is end\n";
